@@ -3,6 +3,7 @@ import json
 import wtiproj03_ETL
 import re
 import random
+import wtiproj03_API_client
 api = Flask(__name__)
 api.config['JSON_SORT_KEYS'] = False
 
@@ -29,9 +30,19 @@ def app():
     if request.method == 'DELETE':
         df = df.iloc[0:0]
         if df.empty:
-            return jsonify('empty')
+            return jsonify('')
         else:
             return jsonify(df.to_dict(orient='records'))
+
+@api.route('/ratings',methods=['GET'])
+def app1():
+    if request.method == 'GET':
+        if df.empty:
+            return jsonify('empty')
+        else:
+            jsonfiles = json.loads(df.to_json(orient='records'))
+            return jsonify(jsonfiles)
+
 @api.route('/avg-genre-ratings/all-users',methods=['GET'])
 def app2():
     if request.method == 'GET':

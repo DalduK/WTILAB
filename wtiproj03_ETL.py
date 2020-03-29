@@ -82,6 +82,7 @@ def jjpd():
             earlierm = row['movieID']
     return df3
 
+# <!-- potrzebne do lab nr 4 -->
 def oceny(nazwa,df3):
     i = 0.0
     sum = 0.0
