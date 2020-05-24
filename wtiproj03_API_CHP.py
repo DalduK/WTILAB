@@ -6,11 +6,9 @@ import cherrypy
 
 import wtiproj03_ETL
 
-df = wtiproj03_ETL.jjpd()
-list1 = []
-for col in df.columns:
-    if re.search('genre-[A-Za-z\-]+',col):
-        list1.append(col)
+df, list1 = wtiproj03_ETL.jjpd()
+df = df.fillna(0)
+
 @cherrypy.expose
 @cherrypy.tools.json_out()
 class rating(object):

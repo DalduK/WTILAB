@@ -7,11 +7,8 @@ import wtiproj03_API_client
 api = Flask(__name__)
 api.config['JSON_SORT_KEYS'] = False
 
-df = wtiproj03_ETL.jjpd()
-list1 = []
-for col in df.columns:
-    if re.search('genre-[A-Za-z\-]+',col):
-        list1.append(col)
+df, list1 = wtiproj03_ETL.jjpd()
+df = df.fillna(0)
 
 @api.route('/rating',methods=['GET','POST','DELETE'])
 def app():
