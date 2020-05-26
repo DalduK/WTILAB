@@ -1,3 +1,5 @@
+from imp import reload
+
 import pandas as pd
 import numpy as np
 # '/home/przemysaw/PycharmProjects/wtiproj01/user_ratedmovies.dat'
@@ -43,13 +45,13 @@ def mean_genres(df3,list1,flag=False):
         avg_matrix = avg_ratings.reshape(1, -1)
         ratings_genres = ratings_genres - avg_matrix
     data_raitings = pd.DataFrame(ratings_genres, columns=list1)
-    retdef = df.join(data_raitings)
+    df2 = df3.drop(list1,axis=1)
+    retdef = df2.join(data_raitings)
     return avg_ratings, retdef
 
 
 def user_genres_mean(df3,list1, id):
     _,retdef = mean_genres(df3,list1,flag=False)
-    print(retdef)
     usr_rating = retdef.loc[retdef['userID'] == id]
     usr_rating[usr_rating == 0] = np.NaN
     avg_ratings = np.nanmean(usr_rating[list1].values, axis=0)
@@ -65,4 +67,6 @@ def user_profile(df3,list1, id):
 
 if __name__ == '__main__':
     ret, ret2 = jjpd()
-    print(user_profile(ret, ret2, 4827))
+    dataTypeDict = dict(ret.dtypes)
+    print(dataTypeDict)
+    # print(user_genres_mean(ret,ret2,75))
