@@ -7,31 +7,17 @@ import wtiproj03_ETL
 
 
 class api():
-    df, list1 = wtiproj03_ETL.jjpd()
-    df = df.fillna(0)
     def get(self):
-        value = self.df.sample(n=1)
-        jsonfiles = json.dumps(value.to_dict('index'))
-        return jsonfiles
+        return wtiproj03_ETL.get_rand_user().replace(0, np.nan, inplace=True)
 
     def post(self, data):
-        dict1 = {}
-        columns = []
-        for k, v in data.items():
-            try:
-                dict1[k] = int(v)
-                columns.append(k)
-            except:
-                columns.append(k)
-                dict1[k] = float(v)
-        dict1.update()
-        print(dict1)
-        df2 = pd.DataFrame([dict1], columns=dict1.keys())
-        self.df = self.df.append(df2, ignore_index=True, verify_integrity=False, sort=None)
-        return data
+        wtiproj03_ETL.add_ocena(data)
+        id = data["userId"]
+        wtiproj03_ETL.update_user(id)
+        return
 
     def get_all(self):
-        jsonfiles = json.dumps(self.df.to_dict('index'))
+        jsonfiles = json.dumps(wtiproj03_ETL.get_data().to_dict('index'))
         return jsonfiles
 
     def delet(self):
@@ -39,7 +25,7 @@ class api():
         return json.dumps(self.df.to_json(orient='records'))
 
     def avg_usr(self, user):
-        df = wtiproj03_ETL.get_rand_user()
+        df = wtiproj03_ETL.get_data()
         self.df.replace(0, np.nan, inplace=True)
         mean = wtiproj03_ETL.user_genres_mean(self.df, self.list1, int(user))
         dict = {}
@@ -50,9 +36,13 @@ class api():
         return dict
 
     def avg_all(self):
+        df= wtiproj03_ETL.get_data()
         self.df.replace(0, np.nan, inplace=True)
         mean, _ = wtiproj03_ETL.mean_genres(self.df, self.list1, True)
         dict = {}
         for key in range(len(self.list1)):
             dict[self.list1[key]] = mean[key]
         return dict
+
+    def get_profile(self,user):
+        return wtiproj03_ETL.get_user(user)

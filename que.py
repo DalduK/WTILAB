@@ -6,7 +6,7 @@ import redis
 class Que:
 
     def __init__(self):
-        self.r = redis.StrictRedis(port=6381)
+        self.r = redis.StrictRedis(port=6379)
 
     def put(self,name,list):
         self.r.lpush(name, list)
