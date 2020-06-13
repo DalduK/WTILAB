@@ -2,6 +2,7 @@ import json
 import que
 import time
 
+
 def consumer(name):
     q = que.Que()
     t_end = time.time() + 10
@@ -19,4 +20,4 @@ def consumer(name):
         else:
             h = json.loads(s.decode('utf-8'))
             print(h)
-        time.sleep(1.00/4)
+        time.sleep(1.00 / 4)

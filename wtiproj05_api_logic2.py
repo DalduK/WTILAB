@@ -2,13 +2,13 @@ import json
 import numpy as np
 import pandas as pd
 
-import wtiproj03_ETL
-
+import wtiproj05_redis as rr
+import wtiproj04_ETL_and_data_processing as w
 
 
 class api():
     def get(self):
-        ll = wtiproj03_ETL.get_rand_user()
+        ll = rr.get_rand_user()
         print(ll)
         ll = ll.fillna(0)
         return ll.to_dict()
@@ -22,12 +22,12 @@ class api():
                 id = v
             else:
                 data[k] = float(v)
-        wtiproj03_ETL.add_ocena(data)
-        wtiproj03_ETL.update_user(id)
+        rr.add_ocena(data)
+        rr.update_user(id)
         return data
 
     def get_all(self):
-        jsonfiles = json.dumps(wtiproj03_ETL.get_data().to_dict('index'))
+        jsonfiles = json.dumps(rr.get_data().to_dict('index'))
         return jsonfiles
 
     def delet(self):
@@ -35,13 +35,13 @@ class api():
         return json.dumps(self.df.to_json(orient='records'))
 
     def avg_usr(self, user):
-        df = wtiproj03_ETL.get_data()
+        df = rr.get_data()
         list1 = df.columns.values.tolist()
         list1.remove("movieID")
         list1.remove("rating")
         list1.remove("userID")
         id = float(user)
-        mean = wtiproj03_ETL.user_genres_mean(df, list1, str(id))
+        mean = w.user_genres_mean(df, list1, str(id))
         dict = {}
         for key in range(len(list1)):
             dict[list1[key]] = mean[key]
@@ -49,16 +49,16 @@ class api():
         return dict
 
     def avg_all(self):
-        df = wtiproj03_ETL.get_data()
+        df = rr.get_data()
         list1 = df.columns.values.tolist()
         list1.remove("movieID")
         list1.remove("rating")
         list1.remove("userID")
-        mean, _ = wtiproj03_ETL.mean_genres(df, list1, True)
+        mean, _ = w.mean_genres(df, list1, True)
         dict = {}
         for key in range(len(list1)):
             dict[list1[key]] = mean[key]
         return dict
 
-    def get_profile(self,user):
-        return wtiproj03_ETL.get_user(user)
+    def get_profile(self, user):
+        return rr.get_user(user)

@@ -1,5 +1,3 @@
-import json
-
 import wtiproj05_api_logic2
 from flask import Flask, request
 api = Flask(__name__)
