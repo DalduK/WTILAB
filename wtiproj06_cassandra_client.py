@@ -1,5 +1,11 @@
+import secrets
+
 from cassandra.cluster import Cluster
-import wtiproj04_ETL_and_data_processing as w
+from cassandra.query import dict_factory
+
+import wtiproj04_ETL_and_data_processing as ws
+import wtiproj03_ETL as w
+import json
 import pandas as pd
 
 cluster = Cluster(['127.0.0.1'], port=9042)
@@ -73,17 +79,34 @@ def create_usr_profile_table(session):
             """)
 
 
-def push_data_table(session, keyspace, userID, df):
-    query = """INSERT INTO """ + keyspace + """.""" + userID + """(userID,movieID, rating, genre_Action, genre_Adventure, genre_Animation, genre_Children,
+def push_data_table(session, keyspace, table, df):
+    query = """INSERT INTO """ + keyspace + """.""" + table + """(userID,movieID, rating, genre_Action, genre_Adventure, genre_Animation, genre_Children,
                 genre_Comedy, genre_Crime, genre_Documentary, genre_Drama, genre_Fantasy, genre_Film_Noir, genre_Horror,
                 genre_IMAX, genre_Musical, genre_Mystery, genre_Romance, genre_Sci_Fi, genre_Short, genre_Thriller,
                 genre_War, genre_Western) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
     prepared = session.prepare(query)
     for index, rows in df.iterrows():
-        session.execute(prepared, (rows[0], rows[1], rows[2], rows[3], rows[4], rows[5], rows[6], rows[7], rows[8],
-                                   rows[9], rows[10], rows[11], rows[12], rows[13], rows[14], rows[15], rows[16],
-                                   rows[17],
-                                   rows[18], rows[19], rows[20], rows[21], rows[22]))
+        print(rows)
+        session.execute(prepared, (rows['userID'], rows['movieID'], rows['rating'], rows['genre-Action'], rows['genre-Adventure'],
+                                   rows['genre-Animation'], rows['genre-Children'], rows['genre-Comedy'], rows['genre-Crime'],
+                                   rows['genre-Documentary'], rows['genre-Drama'], rows['genre-Fantasy'], rows['genre-Film-Noir'],
+                                   rows['genre-Horror'], rows['genre-IMAX'], rows['genre-Musical'], rows['genre-Mystery'],
+                                   rows['genre-Romance'],rows['genre-Sci-Fi'], rows['genre-Short'], rows['genre-Thriller'],
+                                   rows['genre-War'], rows['genre-Western']))
+
+def push_data_table(session, keyspace, table, df):
+    query = """INSERT INTO """ + keyspace + """.""" + table + """(userID, movieID, rating, genre_Action, genre_Adventure, genre_Animation, genre_Children,
+                genre_Comedy, genre_Crime, genre_Documentary, genre_Drama, genre_Fantasy, genre_Film_Noir, genre_Horror,
+                genre_IMAX, genre_Musical, genre_Mystery, genre_Romance, genre_Sci_Fi, genre_Short, genre_Thriller,
+                genre_War, genre_Western) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
+    prepared = session.prepare(query)
+    dc = df.to_dict()
+    session.execute(prepared, (dc[0]['userID'],dc[0]['movieID'],dc[0]['rating'],dc[0]['genre-Action'],dc[0]['genre-Adventure'],
+                            dc[0]['genre-Animation'],dc[0]['genre-Children'],dc[0]['genre-Comedy'],dc[0]['genre-Crime'],
+                                dc[0]['genre-Documentary'],dc[0]['genre-Drama'],dc[0]['genre-Fantasy'],dc[0]['genre-Film-Noir'],
+                                dc[0]['genre-Horror'],dc[0]['genre-IMAX'],dc[0]['genre-Musical'],dc[0]['genre-Mystery'],
+                                dc[0]['genre-Romance'],dc[0]['genre-Sci-Fi'],dc[0]['genre-Short'],dc[0]['genre-Thriller'],
+                                dc[0]['genre-War'],dc[0]['genre-Western']))
 
 
 def push_usr_table(session):
@@ -100,7 +123,7 @@ def push_usr_table(session):
     lista.remove("rating")
     lista.remove("userid")
     for i in df.userid.unique():
-        usr = w.user_profile2(df, lista, i)
+        usr = ws.user_profile2(df, lista, i)
         session.execute(prepared, (i, usr[0], usr[1], usr[2], usr[3], usr[4], usr[5], usr[6], usr[7], usr[8],
                                    usr[9], usr[10], usr[11], usr[12], usr[13], usr[14], usr[15], usr[16], usr[17],
                                    usr[18], usr[19]))
@@ -111,9 +134,22 @@ def get_data_table(session, keyspace, table):
     df = pd.DataFrame(list(rows))
     return df
 
+def get_usr_table(session, usr):
+    session.row_factory = dict_factory
+    rows = session.execute("SELECT * FROM usr_profiles.profiles where userid="+str(usr)+";")
+    return list(rows)
+
+def get_random_user(session):
+    session.row_factory = dict_factory
+    rows = session.execute("SELECT * FROM user_ratings.user_avg_rating ;")
+    ret = secrets.choice(list(rows))
+    return ret
 
 def delete_table(session, keyspace, table):
     session.execute("DROP TABLE " + keyspace + "." + table + ";")
+
+def clear_table(session, keyspace, table):
+    session.execute("TRUNCATE " + keyspace + "." + table + ";")
 
 
 if __name__ == '__main__':
@@ -121,13 +157,14 @@ if __name__ == '__main__':
     table = "user_avg_rating"
     keyspace2 = "usr_profiles"
     table2 = "profiles"
-    df, _ = w.jjpd()
-    names = df.userID.unique()
+    # df, _ = w.jjpd()
+    # names = df.userID.unique()
     # create_keyspace(session, keyspace)
     # create_data_table(session, keyspace, table)
     # push_data_table(session,keyspace,table,df)
-    print(get_data_table(session, keyspace, table))
+    # print(get_data_table(session, keyspace, table))
     # create_keyspace(session,keyspace2)
     # create_usr_profile_table(session)
     # push_usr_table(session)
-    print(get_data_table(session, keyspace2, table2))
+    # print(get_data_table(session, keyspace2, table2))
+    print(get_usr_table(session,75.0))
