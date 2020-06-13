@@ -67,6 +67,14 @@ def user_genres_mean(df3, list1, id):
     avg_ratings[np.isnan(avg_ratings)] = 0
     return avg_ratings
 
+#do zadania 6
+def user_genres_mean2(df3, list1, id):
+    _, retdef = mean_genres(df3, list1, flag=False)
+    usr_rating = retdef.loc[retdef['userid'] == id]
+    usr_rating[usr_rating == 0] = np.NaN
+    avg_ratings = np.nanmean(usr_rating[list1].values, axis=0)
+    avg_ratings[np.isnan(avg_ratings)] = 0
+    return avg_ratings
 
 def user_profile(df3, list1, id):
     avg_ratings, _ = mean_genres(df3, list1, flag=False)
@@ -74,6 +82,11 @@ def user_profile(df3, list1, id):
     usr_profile = usr_avg - avg_ratings
     return usr_profile
 
+def user_profile(df3, list1, id):
+    avg_ratings, _ = mean_genres(df3, list1, flag=False)
+    usr_avg = user_genres_mean2(df3, list1, id)
+    usr_profile = usr_avg - avg_ratings
+    return usr_profile
 
 def load_data():
     r2.flushdb()
@@ -164,6 +177,8 @@ def get_rand_user():
 
 
 if __name__ == '__main__':
+    j,_ = jjpd()
+    print(j)
     # load_data()
     # load_users()
     df = {'movieID': 31617.0, 'rating': 3.5, 'genre-Action': 1.0, 'genre-Adventure': 1.0, 'genre-Animation': 0, 'genre-Children': 0,
