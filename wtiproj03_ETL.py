@@ -5,7 +5,7 @@ import redis
 r = redis.Redis(host='localhost', port=32768, db=0)
 r2 = redis.Redis(host='localhost', port=32768, db=1)
 
-df = pd.read_csv('/home/dldk/PycharmProjects/WTILAB/user_ratedmovies.dat', nrows=100000, delimiter="\t",
+df = pd.read_csv('/home/dldk/PycharmProjects/WTILAB/user_ratedmovies.dat', nrows=10000, delimiter="\t",
                  usecols=["userID", "movieID", "rating"])
 df1 = pd.read_csv('/home/dldk/PycharmProjects/WTILAB/movie_genres.dat',
                   delimiter="\t",

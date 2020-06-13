@@ -40,7 +40,7 @@ def user_profile(df3, list1, id):
     usr_profile = usr_avg - avg_ratings
     return usr_profile
 
-def user_profile(df3, list1, id):
+def user_profile2(df3, list1, id):
     avg_ratings, _ = mean_genres(df3, list1, flag=False)
     usr_avg = user_genres_mean2(df3, list1, id)
     usr_profile = usr_avg - avg_ratings

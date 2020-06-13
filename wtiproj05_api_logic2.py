@@ -14,20 +14,25 @@ class api():
         return ll.to_dict()
 
     def post(self, data):
+        print(data)
+        immutable = frozenset(data.items())
+        read_frozen = dict(immutable)
         id = 0
-        for k, v in data.items():
+        for k, v in read_frozen.items():
             if v == 0:
-                data[k] = np.nan
+                read_frozen[k] = np.nan
             elif k == 'userID':
                 id = v
             else:
-                data[k] = float(v)
-        rr.add_ocena(data)
+                read_frozen[k] = float(v)
+        rr.add_ocena(read_frozen)
         rr.update_user(id)
-        return data
+        return read_frozen
 
     def get_all(self):
-        jsonfiles = json.dumps(rr.get_data().to_dict('index'))
+        r = rr.get_data().to_dict('r')
+        print(r)
+        jsonfiles = json.dumps(r)
         return jsonfiles
 
     def delet(self):
@@ -37,6 +42,7 @@ class api():
     def avg_usr(self, user):
         df = rr.get_data()
         list1 = df.columns.values.tolist()
+        df.fillna(value=pd.np.nan, inplace=True)
         list1.remove("movieID")
         list1.remove("rating")
         list1.remove("userID")
@@ -51,6 +57,7 @@ class api():
     def avg_all(self):
         df = rr.get_data()
         list1 = df.columns.values.tolist()
+        df.fillna(value=pd.np.nan, inplace=True)
         list1.remove("movieID")
         list1.remove("rating")
         list1.remove("userID")

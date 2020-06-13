@@ -1,5 +1,5 @@
 from cassandra.cluster import Cluster
-import wtiproj03_ETL as w
+import wtiproj04_ETL_and_data_processing as w
 import pandas as pd
 
 cluster = Cluster(['127.0.0.1'], port=9042)
@@ -100,7 +100,7 @@ def push_usr_table(session):
     lista.remove("rating")
     lista.remove("userid")
     for i in df.userid.unique():
-        usr = w.user_profile(df, lista, i)
+        usr = w.user_profile2(df, lista, i)
         session.execute(prepared, (i, usr[0], usr[1], usr[2], usr[3], usr[4], usr[5], usr[6], usr[7], usr[8],
                                    usr[9], usr[10], usr[11], usr[12], usr[13], usr[14], usr[15], usr[16], usr[17],
                                    usr[18], usr[19]))

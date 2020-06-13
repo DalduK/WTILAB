@@ -1,6 +1,7 @@
 import json
 import secrets
 import wtiproj04_ETL_and_data_processing as wt
+import wtiproj03_ETL as w
 import pandas as pd
 import redis
 
@@ -10,7 +11,7 @@ r2 = redis.Redis(host='localhost', port=32768, db=1)
 
 def load_data():
     r2.flushdb()
-    df, lista = wt.jjpd()
+    df, lista = w.jjpd()
     print(df)
     print(df.shape)
     lista.insert(0, 'movieID')
@@ -99,3 +100,4 @@ def get_ddata(id):
 def get_rand_user():
     x = r2.randomkey()
     return get_ddata(x.decode("utf-8"))
+
