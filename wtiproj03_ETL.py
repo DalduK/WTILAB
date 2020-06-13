@@ -102,7 +102,7 @@ def get_data():
 def load_users():
     r.flushdb()
     df = get_data()
-    print(df)
+    df.fillna(value=pd.np.nan, inplace=True)
     lista = df.columns.values.tolist()
     lista.remove("movieID")
     lista.remove("rating")
@@ -110,18 +110,19 @@ def load_users():
     for i in df.userID.unique():
         usr = user_profile(df, lista, i)
         for h in range(len(lista)):
-            r.hset(i.astype(str), lista[h], usr[h])
+            r.hset(i, lista[h], usr[h])
     print("completed")
 
 def update_user(id):
     df = get_data()
     lista = df.columns.values.tolist()
+    df.fillna(value=pd.np.nan, inplace=True)
     lista.remove("movieID")
     lista.remove("rating")
     lista.remove("userID")
     usr = user_profile(df, lista, id)
     for h in range(len(lista)):
-        r.hset(id.astype(str), lista[h], usr[h])
+        r.hset(id, lista[h], usr[h])
     print("completed")
 
 def get_users():
@@ -163,14 +164,17 @@ def get_rand_user():
 
 
 if __name__ == '__main__':
-    load_data()
-    load_users()
-    df = {'movieID': 31617.0, 'rating': 3.5, 'genre-Action': 1.0, 'genre-Adventure': 1.0, 'genre-Animation': 0, 'genre-Children': 0, 'genre-Comedy': 0, 'genre-Crime': 0, 'genre-Documentary': 0, 'genre-Drama': 1.0, 'genre-Fantasy': 0, 'genre-Film-Noir': 0, 'genre-Horror': 0, 'genre-IMAX': 0, 'genre-Musical': 0, 'genre-Mystery': 0, 'genre-Romance': 1.0, 'genre-Sci-Fi': 0, 'genre-Short': 0, 'genre-Thriller': 0, 'genre-War': 1.0, 'genre-Western': 0, 'userID': 75.0}
-    print(get_rand_user())
+    # load_data()
+    # load_users()
+    df = {'movieID': 31617.0, 'rating': 3.5, 'genre-Action': 1.0, 'genre-Adventure': 1.0, 'genre-Animation': 0, 'genre-Children': 0,
+          'genre-Comedy': 0, 'genre-Crime': 0, 'genre-Documentary': 0, 'genre-Drama': 1.0, 'genre-Fantasy': 0, 'genre-Film-Noir': 0,
+          'genre-Horror': 0, 'genre-IMAX': 0, 'genre-Musical': 0, 'genre-Mystery': 0, 'genre-Romance': 1.0, 'genre-Sci-Fi': 0,
+          'genre-Short': 0, 'genre-Thriller': 0, 'genre-War': 1.0, 'genre-Western': 0, 'userID': 75.0}
+    # print(get_rand_user())
     # print(df)
-    print(get_user(75))
-    update_user(75)
-    add_ocena(df)
-    print(get_user(75))
+    # print(get_user(75.0))
+    # add_ocena(df)
+    # update_user(75.0)
+    # print(get_user(75.0))
     # print(get_data())
     # print(get_users())
