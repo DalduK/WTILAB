@@ -45,13 +45,14 @@ def delete_table(session, keyspace, table):
 
 
 if __name__ == "__main__":
-    keyspace = "user_ratings"
-    table = "user_avg_rating"
+    keyspace = "user_ratings2"
+    table = "user_avg_rating2"
     # utworzenia połączenia z klastrem
     cluster = Cluster(['127.0.0.1'], port=9042)
     session = cluster.connect()
     # utworzenie nowego keyspace
     create_keyspace(session, keyspace)
+    create_table(session,keyspace,table)
     # ustawienie używanego keyspace w sesji
     session.set_keyspace(keyspace)
     # użycie dict_factory pozwala na zwracanie słowników
@@ -67,5 +68,4 @@ if __name__ == "__main__":
     clear_table(session, keyspace, table)
     get_data_table(session, keyspace, table)
     # usuwanie tabeli
-    delete_table(session, keyspace, table)
     delete_table(session, keyspace, table)

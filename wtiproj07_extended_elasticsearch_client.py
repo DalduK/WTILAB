@@ -1,8 +1,5 @@
-import json
-
 import pandas as pd
 from elasticsearch import Elasticsearch, helpers
-import numpy as np
 
 class ElasticClient:
     def __init__(self, address='localhost:10000'):
@@ -99,57 +96,3 @@ class ElasticClient:
             for i in item['_source']['whoRated']:
                 user_id.add(i)
         return list(user_id)
-
-
-if __name__ == '__main__':
-    ec = ElasticClient()
-    # ec.index_documents()
-    # ------ Simple operations ------
-    print()
-    user_document = ec.get_movies_liked_by_user(75)
-    print(user_document)
-    print(ec.collab_user_search(75))
-    # ec.colaboratoryFileterMovie(75)
-    print(ec.collab_movie_search(1))
-    movie_id = np.random.choice(user_document['ratings'])
-    movie_document = ec.get_users_that_like_movie(movie_id)
-    random_user_id = np.random.choice(movie_document['whoRated'])
-    random_user_document = ec.get_movies_liked_by_user(random_user_id)
-
-    print('User 75 likes following movies:')
-    print(user_document)
-
-    print('Movie {} is liked by following users:'.format(movie_id))
-    print(movie_document)
-
-    print('Is user 75 among users in movie {} document?'.format(movie_id))
-    print(movie_document['whoRated'].index(75) != -1)
-
-    import random
-
-    some_test_movie_ID = 1
-
-    print("Some test movie ID: ", some_test_movie_ID)
-    list_of_users_who_liked_movie_of_given_ID = ec.get_users_that_like_movie(some_test_movie_ID)["whoRated"]
-
-    print("List of users who liked the test movie: ",
-          *list_of_users_who_liked_movie_of_given_ID)
-
-    index_of_random_user_who_liked_movie_of_given_ID = random.randint(0,
-        len(list_of_users_who_liked_movie_of_given_ID))
-
-    print("Index of random user who liked the test movie: ",
-          index_of_random_user_who_liked_movie_of_given_ID)
-
-    some_test_user_ID = list_of_users_who_liked_movie_of_given_ID[index_of_random_user_who_liked_movie_of_given_ID]
-
-    print("ID of random user who liked the test movie: ", some_test_user_ID)
-    movies_liked_by_user_of_given_id = ec.get_movies_liked_by_user(some_test_user_ID)["ratings"]
-
-    print("IDs of movies liked by the random user who liked the test movie: ",
-          *movies_liked_by_user_of_given_id)
-
-    if some_test_movie_ID in movies_liked_by_user_of_given_id:
-        print(
-            "As expected, the test movie ID is among the IDs of movies " +
-            "liked by the random user who liked the test movie ;-)")

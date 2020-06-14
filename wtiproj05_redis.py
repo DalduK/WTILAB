@@ -30,6 +30,7 @@ def get_data():
             y["userID"] = x.decode("utf-8")
             lista.append(y)
     df = pd.DataFrame(lista)
+    df.fillna(0)
     return df
 
 
@@ -96,8 +97,15 @@ def get_ddata(id):
     df.fillna(value=pd.np.nan, inplace=True)
     return df
 
+def dell():
+    r.flushall()
+    return ""
+
 
 def get_rand_user():
     x = r2.randomkey()
     return get_ddata(x.decode("utf-8"))
 
+if __name__ == '__main__':
+    load_data()
+    load_users()

@@ -17,7 +17,7 @@ def mean_genres(df3, list1, flag=False):
     return avg_ratings, retdef
 
 
-def user_genres_mean(df3, list1, id):
+def user_mean(df3, list1, id):
     _, retdef = mean_genres(df3, list1, flag=False)
     usr_rating = retdef.loc[retdef['userID'] == id]
     usr_rating[usr_rating == 0] = np.NaN
@@ -26,7 +26,7 @@ def user_genres_mean(df3, list1, id):
     return avg_ratings
 
 #do zadania 6
-def user_genres_mean2(df3, list1, id):
+def user_mean2(df3, list1, id):
     _, retdef = mean_genres(df3, list1, flag=False)
     usr_rating = retdef.loc[retdef['userid'] == id]
     usr_rating[usr_rating == 0] = np.NaN
@@ -36,12 +36,12 @@ def user_genres_mean2(df3, list1, id):
 
 def user_profile(df3, list1, id):
     avg_ratings, _ = mean_genres(df3, list1, flag=False)
-    usr_avg = user_genres_mean(df3, list1, id)
+    usr_avg = user_mean(df3, list1, id)
     usr_profile = usr_avg - avg_ratings
     return usr_profile
 
 def user_profile2(df3, list1, id):
     avg_ratings, _ = mean_genres(df3, list1, flag=False)
-    usr_avg = user_genres_mean2(df3, list1, id)
+    usr_avg = user_mean2(df3, list1, id)
     usr_profile = usr_avg - avg_ratings
     return usr_profile

@@ -57,7 +57,7 @@ class api():
         list1.remove("rating")
         list1.remove("userid")
         id = float(user)
-        mean = w.user_genres_mean2(df, list1, id)
+        mean = w.user_mean2(df, list1, id)
         dict = {}
         for key in range(len(list1)):
             dict[list1[key]] = mean[key]

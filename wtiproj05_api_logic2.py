@@ -9,12 +9,10 @@ import wtiproj04_ETL_and_data_processing as w
 class api():
     def get(self):
         ll = rr.get_rand_user()
-        print(ll)
         ll = ll.fillna(0)
         return ll.to_dict()
 
     def post(self, data):
-        print(data)
         immutable = frozenset(data.items())
         read_frozen = dict(immutable)
         id = 0
@@ -30,14 +28,13 @@ class api():
         return read_frozen
 
     def get_all(self):
-        r = rr.get_data().to_dict('r')
-        print(r)
+        r = rr.get_data()
+        r = r.fillna(0).to_dict('r')
         jsonfiles = json.dumps(r)
         return jsonfiles
 
     def delet(self):
-        self.df = self.df.iloc[0:0]
-        return json.dumps(self.df.to_json(orient='records'))
+        return rr.dell()
 
     def avg_usr(self, user):
         df = rr.get_data()
@@ -47,7 +44,7 @@ class api():
         list1.remove("rating")
         list1.remove("userID")
         id = float(user)
-        mean = w.user_genres_mean(df, list1, str(id))
+        mean = w.user_mean(df, list1, str(id))
         dict = {}
         for key in range(len(list1)):
             dict[list1[key]] = mean[key]

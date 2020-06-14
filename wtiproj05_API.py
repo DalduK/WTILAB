@@ -1,58 +1,36 @@
-import json
-import numpy as np
-import pandas as pd
+import wtiproj05_api_logic
+from flask import Flask, request
+api = Flask(__name__)
+api.config['JSON_SORT_KEYS'] = False
 
-import wtiproj03_ETL
+data = wtiproj05_api_logic.api()
+
+@api.route('/rating',methods=['GET','POST'])
+def app():
+    if request.method == 'POST':
+        value = request.form
+        return data.post(value)
+
+    if request.method == 'GET':
+        return data.get()
 
 
+@api.route('/ratings',methods=['GET','DELETE'])
+def app1():
+    if request.method == 'GET':
+        return data.get_all()
+    if request.method == 'DELETE':
+        return data.delet()
 
-class api():
-    df, list1 = wtiproj03_ETL.jjpd()
-    df = df.fillna(0)
-    def get(self):
-        value = self.df.sample(n=1)
-        jsonfiles = json.dumps(value.to_dict('index'))
-        return jsonfiles
+@api.route('/avg-genre-ratings/all-users',methods=['GET'])
+def app2():
+    if request.method == 'GET':
+        return data.avg_all()
 
-    def post(self, data):
-        dict1 = {}
-        columns = []
-        for k, v in data.items():
-            try:
-                dict1[k] = int(v)
-                columns.append(k)
-            except:
-                columns.append(k)
-                dict1[k] = float(v)
-        dict1.update()
-        print(dict1)
-        df2 = pd.DataFrame([dict1], columns=dict1.keys())
-        self.df = self.df.append(df2, ignore_index=True, verify_integrity=False, sort=None)
-        return data
+@api.route('/avg-genre-ratings/<user>',methods=['GET'])
+def app3(user):
+    if request.method == 'GET':
+        return data.avg_usr(user)
 
-    def get_all(self):
-        jsonfiles = json.dumps(self.df.to_dict('index'))
-        return jsonfiles
-
-    def delet(self):
-        self.df = self.df.iloc[0:0]
-        return json.dumps(self.df.to_json(orient='records'))
-
-    def avg_usr(self, user):
-        df = wtiproj03_ETL.get_rand_user()
-        self.df.replace(0, np.nan, inplace=True)
-        mean = wtiproj03_ETL.user_genres_mean(self.df, self.list1, int(user))
-        dict = {}
-        for key in range(len(self.list1)):
-            dict[self.list1[key]] = mean[key]
-        dict['userID'] = user
-        self.df = self.df.fillna(0)
-        return dict
-
-    def avg_all(self):
-        self.df.replace(0, np.nan, inplace=True)
-        mean, _ = wtiproj03_ETL.mean_genres(self.df, self.list1, True)
-        dict = {}
-        for key in range(len(self.list1)):
-            dict[self.list1[key]] = mean[key]
-        return dict
+if __name__ == '__main__':
+    api.run()
