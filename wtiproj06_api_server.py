@@ -1,4 +1,3 @@
-import json
 import cherrypy
 import wtiproj06_api_logic
 

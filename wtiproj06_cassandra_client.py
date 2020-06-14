@@ -4,8 +4,6 @@ from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 
 import wtiproj04_ETL_and_data_processing as ws
-import wtiproj03_ETL as w
-import json
 import pandas as pd
 
 cluster = Cluster(['127.0.0.1'], port=9042)
@@ -86,7 +84,6 @@ def push_data_table(session, keyspace, table, df):
                 genre_War, genre_Western) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
     prepared = session.prepare(query)
     for index, rows in df.iterrows():
-        print(rows)
         session.execute(prepared, (rows['userID'], rows['movieID'], rows['rating'], rows['genre-Action'], rows['genre-Adventure'],
                                    rows['genre-Animation'], rows['genre-Children'], rows['genre-Comedy'], rows['genre-Crime'],
                                    rows['genre-Documentary'], rows['genre-Drama'], rows['genre-Fantasy'], rows['genre-Film-Noir'],
@@ -94,7 +91,7 @@ def push_data_table(session, keyspace, table, df):
                                    rows['genre-Romance'],rows['genre-Sci-Fi'], rows['genre-Short'], rows['genre-Thriller'],
                                    rows['genre-War'], rows['genre-Western']))
 
-def push_data_table(session, keyspace, table, df):
+def push_data_table2(session, keyspace, table, df):
     query = """INSERT INTO """ + keyspace + """.""" + table + """(userID, movieID, rating, genre_Action, genre_Adventure, genre_Animation, genre_Children,
                 genre_Comedy, genre_Crime, genre_Documentary, genre_Drama, genre_Fantasy, genre_Film_Noir, genre_Horror,
                 genre_IMAX, genre_Musical, genre_Mystery, genre_Romance, genre_Sci_Fi, genre_Short, genre_Thriller,
@@ -118,7 +115,6 @@ def push_usr_table(session):
     df = get_data_table(session, "user_ratings", "user_avg_rating")
     df.fillna(value=pd.np.nan, inplace=True)
     lista = df.columns.values.tolist()
-    print(lista)
     lista.remove("movieid")
     lista.remove("rating")
     lista.remove("userid")
@@ -153,10 +149,10 @@ def clear_table(session, keyspace, table):
 
 
 if __name__ == '__main__':
-    keyspace = "user_ratings"
-    table = "user_avg_rating"
-    keyspace2 = "usr_profiles"
-    table2 = "profiles"
+    # keyspace = "user_ratings"
+    # table = "user_avg_rating"
+    # keyspace2 = "usr_profiles"
+    # table2 = "profiles"
     # df, _ = w.jjpd()
     # names = df.userID.unique()
     # create_keyspace(session, keyspace)
@@ -166,5 +162,5 @@ if __name__ == '__main__':
     # create_keyspace(session,keyspace2)
     # create_usr_profile_table(session)
     # push_usr_table(session)
-    # print(get_data_table(session, keyspace2, table2))
-    print(get_usr_table(session,75.0))
+    # # print(get_data_table(session, keyspace2, table2))
+    print(get_usr_table(session,78.0))

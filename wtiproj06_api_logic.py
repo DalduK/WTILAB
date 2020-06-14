@@ -33,7 +33,7 @@ class api():
             else:
                 read_frozen[k] = float(v)
         df = pd.DataFrame.from_dict(read_frozen,'index')
-        cc.push_data_table(session,keyspace,table,df)
+        cc.push_data_table2(session,keyspace,table,df)
         cc.push_usr_table(session)
         return read_frozen
 

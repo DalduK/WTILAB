@@ -33,10 +33,6 @@ def push_data_table(session, keyspace, table, userId, avgMovieRating):
 
 def get_data_table(session, keyspace, table):
     rows = session.execute("SELECT * FROM " + keyspace + "." + table + ";")
-    p
-
-def get_data_table(session, keyspace, table):
-    rows = session.execute("SELECT * FROM " + keyspace + "." + table + ";")
     for row in rows:
         print(row)
 
