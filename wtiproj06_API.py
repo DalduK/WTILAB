@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, request
 import wtiproj06_api_logic
 api = Flask(__name__)
@@ -31,6 +33,11 @@ def app2():
 def app3(user):
     if request.method == 'GET':
         return data.avg_usr(user)
+
+@api.route('/profile/<user>',methods=['GET'])
+def app4(user):
+    if request.method == 'GET':
+        return data.get_profile(user)
 
 if __name__ == '__main__':
     api.run()

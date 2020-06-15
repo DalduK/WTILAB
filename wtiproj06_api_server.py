@@ -44,6 +44,14 @@ class avg2(object):
     def GET(self,user):
         return dt.avg_usr(user)
 
+@cherrypy.expose
+@cherrypy.tools.json_out()
+class avg3(object):
+
+    @cherrypy.tools.accept(media='text/plain')
+    def GET(self,user):
+        return dt.get_profile(user)
+
 if __name__ == '__main__':
     conf = {
         '/': {
@@ -57,4 +65,5 @@ if __name__ == '__main__':
     cherrypy.tree.mount(ratings(),'/ratings',conf)
     cherrypy.tree.mount(avg(), '/avg-genre-ratings/all-users', conf)
     cherrypy.tree.mount(avg2(), '/avg-genre-ratings/', conf)
+    cherrypy.tree.mount(avg3(), '/profile/', conf)
     cherrypy.engine.start()

@@ -4,6 +4,7 @@ from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 
 import wtiproj04_ETL_and_data_processing as ws
+import wtiproj03_ETL as w
 import pandas as pd
 
 cluster = Cluster(['127.0.0.1'], port=9042)
@@ -133,7 +134,7 @@ def get_data_table(session, keyspace, table):
 def get_usr_table(session, usr):
     session.row_factory = dict_factory
     rows = session.execute("SELECT * FROM usr_profiles.profiles where userid="+str(usr)+";")
-    return list(rows)
+    return list(rows)[0]
 
 def get_random_user(session):
     session.row_factory = dict_factory
@@ -149,18 +150,18 @@ def clear_table(session, keyspace, table):
 
 
 if __name__ == '__main__':
-    # keyspace = "user_ratings"
-    # table = "user_avg_rating"
-    # keyspace2 = "usr_profiles"
-    # table2 = "profiles"
-    # df, _ = w.jjpd()
-    # names = df.userID.unique()
-    # create_keyspace(session, keyspace)
+    keyspace = "user_ratings"
+    table = "user_avg_rating"
+    keyspace2 = "usr_profiles"
+    table2 = "profiles"
+    df, _ = w.jjpd()
+    names = df.userID.unique()
+    create_keyspace(session, keyspace)
     # create_data_table(session, keyspace, table)
-    # push_data_table(session,keyspace,table,df)
+    push_data_table(session,keyspace,table,df)
     # print(get_data_table(session, keyspace, table))
     # create_keyspace(session,keyspace2)
     # create_usr_profile_table(session)
-    # push_usr_table(session)
+    push_usr_table(session)
     # # print(get_data_table(session, keyspace2, table2))
     print(get_usr_table(session,78.0))
