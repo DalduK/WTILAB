@@ -55,55 +55,11 @@ class ElasticClient:
         movie_id = int(movie_id)
         return self.es.get(index=index, doc_type="movie", id=movie_id)["_source"]
 
-    def collab_user_search(self,userID):
-        movieId = self.get_movies_liked_by_user(userID)['ratings']
-        val = self.es.search(index='users', body={
-            "query": {
-                "bool": {
-                    "must_not": {
-                        "term": {
-                            "_id": str(userID)
-                        }
-                    },
-                    "filter": {
-                        "terms": {"ratings": movieId}
-                    }
-                }
-            }
-        }, filter_path=['hits.hits._source'])["hits"]["hits"]
-        movie_id = set()
-        for item in val:
-            for i in item['_source']['ratings']:
-                movie_id.add(i)
-
-        return list(movie_id)
-
-    def collab_movie_search(self,movieID):
-        userId = self.get_users_that_like_movie(movieID)["whoRated"]
-        val = self.es.search(index='movies', body={
-            "query": {
-                "bool": {
-                    "must_not": {
-                        "term": {
-                            "_id": str(movieID)
-                        }
-                    },
-                    "filter": {
-                        "terms": {"whoRated": userId}
-                    }
-                }
-            }
-        }, filter_path=['hits.hits._source'])['hits']['hits']
-        user_id = set()
-        for item in val:
-            for i in item['_source']['whoRated']:
-                user_id.add(i)
-        return list(user_id)
 
 
 if __name__ == '__main__':
     ec = ElasticClient()
-    # ec.index_documents()
+    ec.index_documents()
     # ------ Simple operations ------
     print()
     user_document = ec.get_movies_liked_by_user(75)
