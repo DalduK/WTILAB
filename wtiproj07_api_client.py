@@ -1,7 +1,7 @@
 import requests as rq
 import re
 
-prefix = 'http://localhost:5000'
+prefix = 'http://127.0.0.1:5000'
 
 def print_response(response, body=None):
     print('Request:')
@@ -50,29 +50,29 @@ def send_delete(message, url):
 send_get('Document for user with ID = 75', '/user/document/75')
 send_get('Non existing user document', '/user/document/0')
 send_get('Document for movie with ID = 3', '/movie/document/3')
-
+print("----------------------------------------------")
 # # # #------ Preselection ------
 send_get('Preselection for user 75', '/user/preselection/75')
 send_get('Preselection for movie 3', '/movie/preselection/3')
-
+print("----------------------------------------------")
 # # ------ Add/Update/Delete ------
 send_put('Add new movie document number 80000 that nobody likes', '/movie/document/80000', '[]')
 send_put('Add new movie document number 80001 that nobody likes', '/movie/document/80001', '[]')
 send_put('Add new movie document number 80002 that nobody likes', '/movie/document/80002', '[]')
-
+print("----------------------------------------------")
 send_put('Add new user document number 90000, who likes movies 80000 and 80001',
 '/user/document/90000', '[80000, 80001]')
 send_get('Get new user 90000 document', '/user/document/90000')
 send_get('Get updated movie 80000 document', '/movie/document/80000')
 send_get('Get updated movie 80001 document', '/movie/document/80001')
-
+print("----------------------------------------------")
 send_post('Update user 90000, that he now likes movies 80000 and 80002', '/user/bulk',
 [{"user_id": 90000, "liked_movies": [80000, 80002]}])
 send_get('Get updated user 90000 document', '/user/document/90000')
 send_get('Get updated movie 80000 document', '/movie/document/80000')
 send_get('Get updated movie 80001 document', '/movie/document/80001')
 send_get('Get updated movie 80002 document', '/movie/document/80002')
-
+print("----------------------------------------------")
 send_delete('Remove user document number 90000', '/user/document/90000')
 send_get('Get updated movie 80000 document', '/movie/document/80000')
 send_get('Get updated movie 80001 document', '/movie/document/80001')
